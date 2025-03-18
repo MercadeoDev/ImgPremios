@@ -6,43 +6,37 @@
   <link rel="icon" href="data:;base64,=">
 </head>
 <body>
-  <h1>ImgPremiosv1.2</h1>
+  <h1>ImgPremios</h1>
   <ul id="lista-imagenes"></ul>
 
   <script>
-    const imagenes = [
-        '1011.png',
-        '1112.png',
-        '1314.png',
-        '1415.png',
-        '1516.png',
-        '1617.png',
-        '1718.png',
-        '1920.png',
-        '2021.png',
-        '2022.png',
-        '5850000628.png',
-        '5850000793.png',
-        '5861027272.png',
-        '5861027400.png',
-        '5861031141.png',
-        '5861031187.png',
-        '5861032008.png',
-        '5861032204.png',
-        '5861032994.png',
-        '8010000719.png'
-    ];
-  
-    const lista = document.getElementById('lista-imagenes');
-    imagenes.forEach(img => {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = `imagenes/${img}`;
-      a.textContent = img;
-      a.target = '_blank';
-      li.appendChild(a);
-      lista.appendChild(li);
-    });
+    // Configura estos valores con tu usuario y repositorio de GitHub
+    const usuarioGitHub = "MercadeoDev";
+    const repositorioGitHub = "ImgPremios";
+    const rutaCarpeta = "imagenes";  
+
+    // Obtener lista de imágenes desde la API de GitHub
+    fetch(`https://api.github.com/repos/${usuarioGitHub}/${repositorioGitHub}/contents/${rutaCarpeta}`)
+      .then(response => response.json())
+      .then(archivos => {
+        const lista = document.getElementById('lista-imagenes');
+        
+        archivos
+          .filter(archivo => 
+            archivo.type === 'file' && 
+            archivo.name.toLowerCase().endsWith('.png')
+          )
+          .forEach(archivo => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = archivo.download_url;  // URL directa al archivo
+            a.textContent = archivo.name;
+            a.target = '_blank';
+            li.appendChild(a);
+            lista.appendChild(li);
+          });
+      })
+      .catch(error => console.error('Error:', error));
   </script>
 </body>
 </html>
